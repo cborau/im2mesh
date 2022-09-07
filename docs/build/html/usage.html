@@ -1,0 +1,455 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Usage &#8212; im2mesh 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="file_folder_selection" href="api/main.file_folder_selection.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="api/main.file_folder_selection.html" title="file_folder_selection"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">im2mesh 1.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Usage</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="usage">
+<h1><a class="toc-backref" href="#id5" role="doc-backlink">Usage</a><a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#usage" id="id5">Usage</a></p>
+<ul>
+<li><p><a class="reference internal" href="#modules" id="id6">Modules</a></p></li>
+<li><p><a class="reference internal" href="#module-main" id="id7">main Module</a></p></li>
+<li><p><a class="reference internal" href="#module-formatreader" id="id8">formatreader Module</a></p></li>
+<li><p><a class="reference internal" href="#module-formatwriter" id="id9">formatwriter Module</a></p></li>
+<li><p><a class="reference internal" href="#module-sliceinterpolator" id="id10">sliceinterpolator Module</a></p></li>
+<li><p><a class="reference internal" href="#module-visualization" id="id11">visualization Module</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="modules">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Modules</a><a class="headerlink" href="#modules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-main">
+<span id="main-module"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">main Module</a><a class="headerlink" href="#module-main" title="Permalink to this heading">¶</a></h2>
+<p>This library transforms a set of binarized z-slices into a 3D mesh.
+These slices can be read from different formats:
+- .dcm
+- .dcmseg
+- .nifti
+- .jpg, .tif, .png, … [any image format accepted by opencv]
+&#64;author: Diego Sainz (<a class="reference external" href="mailto:dsainz&#37;&#52;&#48;unizar&#46;es">dsainz<span>&#64;</span>unizar<span>&#46;</span>es</a>) &amp; Carlos Borau (<a class="reference external" href="mailto:cborau&#37;&#52;&#48;unizar&#46;es">cborau<span>&#64;</span>unizar<span>&#46;</span>es</a>)</p>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">abouteasygui</span></code>()</p></td>
+<td><p>Shows the EasyGUI revision history.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">boolbox</span></code>([msg, title, choices, image, ...])</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">boolbox()</span></code> (boolean box) displays two buttons.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">buttonbox</span></code>([msg, title, choices, image, ...])</p></td>
+<td><p>Display a message, a title, an image, and a set of buttons.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ccbox</span></code>([msg, title, choices, image, ...])</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">ccbox()</span></code> function offers a choice of Continue and Cancel, and returns either True (for continue) or False (for cancel).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">choicebox</span></code>([msg, title, choices, preselect, ...])</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">choicebox()</span></code> provides a list of choices in a list box to choose from.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">codebox</span></code>([msg, title, text])</p></td>
+<td><p>Display some text in a monospaced font, with no line wrapping.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diropenbox</span></code>([msg, title, default])</p></td>
+<td><p>A dialog to get a directory name.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">egdemo</span></code>()</p></td>
+<td><p>Run the EasyGui demo.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enterbox</span></code>([msg, title, default, strip, ...])</p></td>
+<td><p>Show a box in which a user can enter some text.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exceptionbox</span></code>([msg, title])</p></td>
+<td><p>Display a box that gives information about an exception that has just been raised.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.file_folder_selection.html#main.file_folder_selection" title="main.file_folder_selection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_folder_selection</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fileopenbox</span></code>([msg, title, default, ...])</p></td>
+<td><p>Displays an &quot;open file&quot; dialog box and returns the selected file as a string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">filesavebox</span></code>([msg, title, default, filetypes])</p></td>
+<td><p>A file to get the name of a file to save.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">indexbox</span></code>([msg, title, choices, image, ...])</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">indexbox()</span></code> function displays a set of buttons, and returns the index of the selected button.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">integerbox</span></code>([msg, title, default, ...])</p></td>
+<td><p>Show a box in which a user can enter an integer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/main.main.html#main.main" title="main.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>(selected_path, input_format[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.mesh_format_selection.html#main.mesh_format_selection" title="main.mesh_format_selection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_format_selection</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/main.message_folder.html#main.message_folder" title="main.message_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message_folder</span></code></a>(input_ft)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.message_out_dir.html#main.message_out_dir" title="main.message_out_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message_out_dir</span></code></a>(current_folder)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">msgbox</span></code>([msg, title, ok_button, image, root])</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">msgbox()</span></code> function displays a text message and offers an OK button. The message text appears in the center of the window, the title text appears in the title bar, and you can replace the &quot;OK&quot; default text on the button. Here is the signature::.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">multchoicebox</span></code>([msg, title, choices, ...])</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">multchoicebox()</span></code> function provides a way for a user to select from a list of choices.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">multenterbox</span></code>([msg, title, fields, values, ...])</p></td>
+<td><p>Show screen with multiple data entry fields.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">multpasswordbox</span></code>([msg, title, fields, ...])</p></td>
+<td><p>Same interface as multenterbox.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">passwordbox</span></code>([msg, title, default, image, root])</p></td>
+<td><p>Show a box in which a user can enter a password.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.select_centroids.html#main.select_centroids" title="main.select_centroids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_centroids</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/main.select_smooth.html#main.select_smooth" title="main.select_smooth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_smooth</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.select_vtk.html#main.select_vtk" title="main.select_vtk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vtk</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/main.set_boundary_weight.html#main.set_boundary_weight" title="main.set_boundary_weight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_boundary_weight</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.set_mask_id.html#main.set_mask_id" title="main.set_mask_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_mask_id</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/main.set_mesh_size.html#main.set_mesh_size" title="main.set_mesh_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_mesh_size</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.set_n_interp.html#main.set_n_interp" title="main.set_n_interp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_n_interp</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/main.set_output_prefix.html#main.set_output_prefix" title="main.set_output_prefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_output_prefix</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/main.set_target_faces.html#main.set_target_faces" title="main.set_target_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_target_faces</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/main.set_z_size.html#main.set_z_size" title="main.set_z_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_z_size</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">textbox</span></code>([msg, title, text, codebox, ...])</p></td>
+<td><p>Displays a dialog box with a large, multi-line text box, and returns the entered text as a string.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ynbox</span></code>([msg, title, choices, image, ...])</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">ynbox()</span></code> offers a choice of Yes and No, and returns either <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="module-formatreader">
+<span id="formatreader-module"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">formatreader Module</a><a class="headerlink" href="#module-formatreader" title="Permalink to this heading">¶</a></h2>
+<p>Code containing all functions related to format reading and mask obtention</p>
+<section id="id1">
+<h3>Functions<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatreader.analyze_slice_opencv.html#formatreader.analyze_slice_opencv" title="formatreader.analyze_slice_opencv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyze_slice_opencv</span></code></a>(mask, z_pos[, show_plots])</p></td>
+<td><p>OpenCV implementation to obtain the contours present in the slice.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/formatreader.contour_from_3dmask.html#formatreader.contour_from_3dmask" title="formatreader.contour_from_3dmask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contour_from_3dmask</span></code></a>(mask, slices[, n_interp])</p></td>
+<td><p>From a 3D array containing the semgentation and the list of slices, it creates a set of interpolated slices between each pair of adjacent real slices using the sliceinterpolator module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatreader.get_largest_CC.html#formatreader.get_largest_CC" title="formatreader.get_largest_CC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_largest_CC</span></code></a>(mask)</p></td>
+<td><p>Retrieves the largest connected component in a 3D volume (biggest separated object).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/formatreader.get_mask.html#formatreader.get_mask" title="formatreader.get_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mask</span></code></a>(selected_path, file_format[, ...])</p></td>
+<td><p>Calls the corresponding function depending on the file format selected and retrieves its outputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatreader.get_mask_dcmseg.html#formatreader.get_mask_dcmseg" title="formatreader.get_mask_dcmseg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mask_dcmseg</span></code></a>(filename[, mask_id, ...])</p></td>
+<td><p>Retrieves the surface points of the 3D volume defined by the masks of a DICOM seg file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/formatreader.get_mask_dicom.html#formatreader.get_mask_dicom" title="formatreader.get_mask_dicom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mask_dicom</span></code></a>(directory[, n_interp, ...])</p></td>
+<td><p>Retrieves the surface points of the 3D volume defined by a DICOM file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatreader.get_mask_from_images.html#formatreader.get_mask_from_images" title="formatreader.get_mask_from_images"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mask_from_images</span></code></a>(dirname, ext[, z_size, ...])</p></td>
+<td><p>Retrieves the surface points of the 3D volume defined in multiple individual images.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/formatreader.get_mask_nifti.html#formatreader.get_mask_nifti" title="formatreader.get_mask_nifti"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mask_nifti</span></code></a>(filename[, n_interp, ...])</p></td>
+<td><p>Retrieves the surface points of the 3D volume defined by a NIfTI file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatreader.get_numbers_from_filename.html#formatreader.get_numbers_from_filename" title="formatreader.get_numbers_from_filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_numbers_from_filename</span></code></a>(filename)</p></td>
+<td><p>Read numbers in a filename.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code>(label_image[, background, return_num, ...])</p></td>
+<td><p>Label connected regions of an integer array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatreader.smooth_mask.html#formatreader.smooth_mask" title="formatreader.smooth_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smooth_mask</span></code></a>(img[, n_iter, circle_size])</p></td>
+<td><p>Smooths the input image via erosion/dilation operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/formatreader.voxel2space.html#formatreader.voxel2space" title="formatreader.voxel2space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">voxel2space</span></code></a>(transformation_matrix, ...)</p></td>
+<td><p>Transforms the coordinates in voxel CSYS to real world, using the transformation matrix generated using the get_val_pos() function.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="module-formatwriter">
+<span id="formatwriter-module"></span><h2><a class="toc-backref" href="#id9" role="doc-backlink">formatwriter Module</a><a class="headerlink" href="#module-formatwriter" title="Permalink to this heading">¶</a></h2>
+<p>Code containing all functions related to format writing (stl, gsmh mesh, ansys)</p>
+<section id="id2">
+<h3>Functions<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatwriter.mesh3d_from_stl.html#formatwriter.mesh3d_from_stl" title="formatwriter.mesh3d_from_stl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh3d_from_stl</span></code></a>(output_dir, output_prefix[, ...])</p></td>
+<td><p>Generates a 3D FE mesh using linear tetrahedrons from a 3D .stl file using the GMSH library.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/formatwriter.stl_from_3dply.html#formatwriter.stl_from_3dply" title="formatwriter.stl_from_3dply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stl_from_3dply</span></code></a>(total_points_3d, output_dir, ...)</p></td>
+<td><p>Creates a 3D STL object from a given 3D point cloud using the pymeshlab library.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/formatwriter.write_abaqus_inp.html#formatwriter.write_abaqus_inp" title="formatwriter.write_abaqus_inp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_abaqus_inp</span></code></a>(nodes, elements, ...)</p></td>
+<td><p>Exports the given mesh data (nodes and connectivity) as a compatible ANSYS input file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/formatwriter.write_ansys_inp.html#formatwriter.write_ansys_inp" title="formatwriter.write_ansys_inp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_ansys_inp</span></code></a>(nodes, elements, output_dir, ...)</p></td>
+<td><p>Exports the given mesh data (nodes and connectivity) as a compatible ANSYS input file.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="module-sliceinterpolator">
+<span id="sliceinterpolator-module"></span><h2><a class="toc-backref" href="#id10" role="doc-backlink">sliceinterpolator Module</a><a class="headerlink" href="#module-sliceinterpolator" title="Permalink to this heading">¶</a></h2>
+<p>Code with utilities to interpolate coordinates between two countours</p>
+<section id="id3">
+<h3>Functions<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/sliceinterpolator.bwdist.html#sliceinterpolator.bwdist" title="sliceinterpolator.bwdist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bwdist</span></code></a>(im)</p></td>
+<td><p>Find euclidean distance map of image</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/sliceinterpolator.bwperim.html#sliceinterpolator.bwperim" title="sliceinterpolator.bwperim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bwperim</span></code></a>(bw[, n])</p></td>
+<td><p>Find the perimeter of objects in binary images.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">distance_transform_edt</span></code>(input[, sampling, ...])</p></td>
+<td><p>Exact Euclidean distance transform.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpn</span></code>(points, values, xi[, method, ...])</p></td>
+<td><p>Multidimensional interpolation on regular or rectilinear grids.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/sliceinterpolator.interpshape.html#sliceinterpolator.interpshape" title="sliceinterpolator.interpshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpshape</span></code></a>(top, bottom, position)</p></td>
+<td><p>Find interpolated shape at specific position between top and bottom</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/sliceinterpolator.ndgrid.html#sliceinterpolator.ndgrid" title="sliceinterpolator.ndgrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndgrid</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Same as calling numpy <code class="docutils literal notranslate"><span class="pre">meshgrid</span></code> with <em>indexing</em> = <code class="docutils literal notranslate"><span class="pre">'ij'</span></code> (see <code class="docutils literal notranslate"><span class="pre">meshgrid</span></code> for documentation).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/sliceinterpolator.signedbwdist.html#sliceinterpolator.signedbwdist" title="sliceinterpolator.signedbwdist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signedbwdist</span></code></a>(im)</p></td>
+<td><p>Find perim and return masked image (signed/reversed)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="module-visualization">
+<span id="visualization-module"></span><h2><a class="toc-backref" href="#id11" role="doc-backlink">visualization Module</a><a class="headerlink" href="#module-visualization" title="Permalink to this heading">¶</a></h2>
+<p>Code with utilities to visualize (e.g. point clouds)</p>
+<section id="id4">
+<h3>Functions<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/visualization.progressbar.html#visualization.progressbar" title="visualization.progressbar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">progressbar</span></code></a>(iteration, total[, prefix, ...])</p></td>
+<td><p>Call in a loop to create terminal progress bar</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/visualization.show_point_cloud.html#visualization.show_point_cloud" title="visualization.show_point_cloud"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_point_cloud</span></code></a>(coords)</p></td>
+<td><p>Shows point cloud in 3D</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Usage</a><ul>
+<li><a class="reference internal" href="#modules">Modules</a></li>
+<li><a class="reference internal" href="#module-main">main Module</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-formatreader">formatreader Module</a><ul>
+<li><a class="reference internal" href="#id1">Functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-formatwriter">formatwriter Module</a><ul>
+<li><a class="reference internal" href="#id2">Functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-sliceinterpolator">sliceinterpolator Module</a><ul>
+<li><a class="reference internal" href="#id3">Functions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-visualization">visualization Module</a><ul>
+<li><a class="reference internal" href="#id4">Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="installation.html"
+                          title="Previous page">&larr; Installation</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="api/main.file_folder_selection.html"
+                          title="Next page">&rarr; file_folder_selection</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="api/main.file_folder_selection.html" title="file_folder_selection"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">im2mesh 1.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Usage</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, C.Borau &amp; D.Sainz.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>
