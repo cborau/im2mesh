@@ -1,0 +1,1 @@
+python main.py -b --path "./examples/ex1_letters/input" --format "image" --n_interp 60  --z_size 90.0 --target_faces 50000 --sampling_factor 0.1 --min_mesh_size 5.0 --max_mesh_size 5.0 --output_dir "./examples/ex1_letters/output" --export_vtk

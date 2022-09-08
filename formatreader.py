@@ -49,7 +49,7 @@ def get_mask(selected_path: str, file_format: str, n_interp: int = 10, smooth_sl
         Path to the selected folder or file.
     
     file_format : string
-        File format chosen in the GUI.
+        File format chosen in the GUI (nifti, tiff, dicom-seg, image).
     
     n_interp : int
         Number of interpolated slices to generate between two real slices. The default is 10.

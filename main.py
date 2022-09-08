@@ -70,11 +70,11 @@ def set_n_interp():
 
 def set_target_faces():
     text = ("Approximate wished number of faces of the generated STL.\n"
-            "Default is 5000.")
+            "Default is 50000.")
 
     # window title
     title = "Set target faces for the STL"
-    target_faces = integerbox(text, title, default=5000, lowerbound=10, upperbound=99999999)
+    target_faces = integerbox(text, title, default=50000, lowerbound=10, upperbound=99999999)
     return target_faces
 
 
@@ -108,6 +108,16 @@ def set_boundary_weight():
     title = "Set boundary weight for STL recosntruction"
     boundary_weight = enterbox(text, title, default="0.5")
     return float(boundary_weight)
+    
+    
+def set_sampling_factor():
+    text = ("Reduction ratio applied to the initial pointcloud. Ranges from 0 to 1.\n"
+            "Default is 0.1.")
+
+    # window title
+    title = "Set sampling factor for pointcloud simplification"
+    sampling_factor = enterbox(text, title, default="0.1")
+    return float(sampling_factor)
 
 
 def set_mesh_size():
@@ -174,8 +184,8 @@ def mesh_format_selection():
     return mesh_format
 
 
-def main(selected_path, input_format, n_interp=10, smooth_slices=False, z_size=30.0, mask_id=[0], target_faces=10000,
-         boundary_weight=0.5, min_mesh_size=2.5, max_mesh_size=2.5, output_dir: str = os.getcwd(),
+def main(selected_path, input_format, n_interp=10, smooth_slices=False, z_size=30.0, mask_id=[0], target_faces=50000,
+         boundary_weight=0.5, sampling_factor=0.1, min_mesh_size=2.5, max_mesh_size=2.5, output_dir: str = os.getcwd(),
          output_prefix: str = 'output',
          save_centroids=False, export_vtk=False, mesh_format=None):
     contours_3d, covers, transf_mat = fmt_r.get_mask(selected_path=selected_path,
@@ -194,7 +204,8 @@ def main(selected_path, input_format, n_interp=10, smooth_slices=False, z_size=3
                          output_dir,
                          output_prefix,
                          target_faces,
-                         boundary_weight
+                         boundary_weight,
+                         sampling_factor
                          )
     nodes, elements = fmt_w.mesh3d_from_stl(output_dir,
                                             output_prefix,
@@ -242,13 +253,16 @@ if __name__ == "__main__":
                         type=lambda s: [int(item) for item in s.split(',')])
     parser.add_argument('--smooth_slices', action='store_true',
                         help="If True, the slices will be smooothed before interpolating them.")
-    parser.add_argument('--target_faces', type=int, default=5000,
+    parser.add_argument('--target_faces', type=int, default=50000,
                         help=("Number of faces of the STL generated.\n"
-                              "Default is 5000."))
+                              "Default is 50000."))
     parser.add_argument('--boundary_weight', type=float, default=0.5,
                         help=("Sets the importance of the boundary on the simplification algorithm.\n"
                               "If it equals 1.0, it means that the boundary has the same importance of the rest.\n"
                               "Default is 0.5."))
+    parser.add_argument('--sampling_factor', type=float, default=0.1,
+                        help=("Reduction ratio applied to the initial pointcloud.\n"
+                              "Default is 0.1."))
     parser.add_argument('--min_mesh_size', type=float, default=2.5,
                         help="Minimum element size of the mesh created.\nDefault is 2.5 mm")
     parser.add_argument('--max_mesh_size', type=float, default=2.5,
@@ -269,7 +283,7 @@ if __name__ == "__main__":
     if args.batch:
         main(args.path, args.format, args.n_interp, args.smooth_slices,
              args.z_size, args.mask_id,
-             args.target_faces, args.boundary_weight, args.min_mesh_size,
+             args.target_faces, args.boundary_weight, args.sampling_factor, args.min_mesh_size,
              args.max_mesh_size, args.output_dir, args.output_prefix, args.save_centroids, args.export_vtk,
              args.mesh_format)
     else:
@@ -296,6 +310,7 @@ if __name__ == "__main__":
 
         target_faces = set_target_faces()
         boundary_weight = set_boundary_weight()
+        sampling_factor = set_sampling_factor()
         min_mesh_size, max_mesh_size = set_mesh_size()
         message_out_dir(os.getcwd())
         output_dir = diropenbox(msg="Choose a destination folder")

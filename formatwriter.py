@@ -12,7 +12,8 @@ def stl_from_3dply(total_points_3d,
                    output_dir: str,
                    output_prefix: str, 
                    target_faces: int = 5000,
-                   boundary_weight: float = 0.5):
+                   boundary_weight: float = 0.5,
+                   sampling_factor: float = 0.1):
     """
     
     Creates a 3D STL object from a given 3D point cloud using the pymeshlab library.
@@ -32,6 +33,12 @@ def stl_from_3dply(total_points_3d,
         Values greater than 1.0 raise boundary importance and has the effect of removing
         less vertices on the border. Admitted range of values (0,+inf).
 
+    sampling_factor : float
+        It is a ratio from 0 to 1 that sets the percentage of reduction in the number of points
+        of the simplified pointcloud. 
+        Reduced number of points = sampling_factor * initial number of points
+        Defaults to 0.1. Low values are recommended for the robustness of the algorithm.
+    
     filename_output : string
         Name of the output file containing the STL object
 
@@ -46,22 +53,24 @@ def stl_from_3dply(total_points_3d,
     # Then we initiate meshlab and load this file
     ms = pymeshlab.MeshSet()
     ms.load_new_mesh(os.path.join(output_dir, output_prefix+".ply"))  # Load the ply mesh to meshlab
+    n_samples = int(len(total_points_3d)*sampling_factor) # Number of samples of the simplifed pointcloud
+    ms.apply_filter("generate_simplified_point_cloud", samplenum = n_samples)
     ms.apply_filter(
-        'compute_normals_for_point_sets')  # Apply filter to compute the normals from the given set of points
-    ms.apply_filter('surface_reconstruction_screened_poisson',
-                    depth=6)  # Apply filter to reconstruct the surface based on those normals and the set of points
-    ms.apply_filter('remove_duplicate_vertices')
-    ms.apply_filter('hc_laplacian_smooth')  # Smooth the surface obtained
+        'compute_normal_for_point_clouds')  # Apply filter to compute the normals from the given set of points
+    ms.apply_filter('generate_surface_reconstruction_screened_poisson',
+                    depth=8)  # Apply filter to reconstruct the surface based on those normals and the set of points
+    ms.apply_filter('meshing_remove_duplicate_vertices')
+    ms.apply_filter('apply_coord_hc_laplacian_smoothing')  # Smooth the surface obtained
     # ms.save_current_mesh('step1.stl') # Save the obatined surface as an STL file
-    ms.apply_filter('simplification_quadric_edge_collapse_decimation', targetfacenum=target_faces, planarquadric=True,
+    ms.apply_filter('meshing_decimation_quadric_edge_collapse', targetfacenum=target_faces, planarquadric=True,
                     autoclean=True, qualitythr=0.9, planarweight=0.1,
                     boundaryweight=boundary_weight)  # Apply filter to decimate the stl geometry
     # # https://pymeshlab.readthedocs.io/en/0.1.8/filter_list.html
     # #Targetfacenum is the number of faces we want the final geometry to have. Change this number if ANSYS meshing fails
     # #Planarquadric keeps triangles in the flat surfaces so the external mesh is not distorted. This must be always True
     # #planarweight is related to the previous feature. 0.1 seems to be the sweet spot for the cases avalible currently
-    ms.apply_filter('remove_duplicate_vertices')
-    ms.apply_filter('hc_laplacian_smooth')  # Smooth the simplified surface
+    ms.apply_filter('meshing_remove_duplicate_vertices')
+    ms.apply_filter('apply_coord_hc_laplacian_smoothing')  # Smooth the simplified surface
     ms.save_current_mesh(os.path.join(output_dir, output_prefix + ".stl"))  # Save the obatined surface as an STL file
     os.remove(os.path.join(output_dir, output_prefix+".ply"))
     return
