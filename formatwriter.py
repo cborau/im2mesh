@@ -70,6 +70,7 @@ def stl_from_3dply(total_points_3d,
     # #Planarquadric keeps triangles in the flat surfaces so the external mesh is not distorted. This must be always True
     # #planarweight is related to the previous feature. 0.1 seems to be the sweet spot for the cases avalible currently
     ms.apply_filter('meshing_remove_duplicate_vertices')
+    ms.apply_filter('meshing_remove_duplicate_faces')
     ms.apply_filter('apply_coord_hc_laplacian_smoothing')  # Smooth the simplified surface
     ms.save_current_mesh(os.path.join(output_dir, output_prefix + ".stl"))  # Save the obatined surface as an STL file
     os.remove(os.path.join(output_dir, output_prefix+".ply"))

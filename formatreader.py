@@ -28,8 +28,8 @@ def get_largest_CC(mask):
             A 3D binarized volume containing only the largest object.
 
     """
-    mask_bin=(mask > 0).astype(int) #Make sure mask is binary
-    labels = label(mask_bin)
+    mask_bin=(mask > 0).astype(np.uint8) #Make sure mask is binary
+    labels = label(mask_bin, connectivity=1)
     if labels.max() != 0:
         largest_cc = labels == np.argmax(
             np.bincount(labels.flat)[1:]) + 1  # +1 because 0, which is background, is eliminated
@@ -86,7 +86,7 @@ def get_mask(selected_path: str, file_format: str, n_interp: int = 10, smooth_sl
             contours, covers, transf_mat = get_mask_dcmseg(selected_path, mask_id=mask_id, n_interp=n_interp,
                                                            smooth_slices=smooth_slices)
         elif ext == '.nii' and (file_format == 'nifti'):
-            contours, covers, transf_mat = get_mask_nifti(selected_path, n_interp=n_interp, smooth_slices=smooth_slices)
+            contours, covers, transf_mat = get_mask_nifti(selected_path, mask_id, n_interp=n_interp, smooth_slices=smooth_slices)
         elif ((ext == '.tif') or (ext == '.tiff') or (ext == '.jpg') or (ext == '.png')) and (file_format == 'image'):
             # If user selects a single image, use the parent folder
             selected_path = os.path.dirname(os.path.abspath(selected_path))
@@ -288,11 +288,9 @@ def get_mask_dcmseg(filename: str, mask_id=[0], n_interp=10, smooth_slices=True)
     result = reader.read(dcm)
     voxel_size_x, voxel_size_y, voxel_size_z = result.spacing
     image_data = result.data  # directly available
-    # image = result.image  # lazy construction
 
     if (len(mask_id) == 1) and (mask_id[0] != 0):
         mask = (image_data == mask_id[0]).astype(np.float64)
-        coords = np.argwhere(mask).astype(np.float32)  # WARNING: coords as (z,x,y)
     else:
         if (len(mask_id) == 1) and (mask_id[0] == 0):  # mask_id = [0] means get all masks
             mask_ids = np.unique(image_data)
@@ -300,36 +298,36 @@ def get_mask_dcmseg(filename: str, mask_id=[0], n_interp=10, smooth_slices=True)
         else:
             mask_ids = mask_id
         mask = np.zeros(image_data.shape)
-        coords = None
+
         for m in mask_ids:
             mask_m = image_data == m
             mask += mask_m
-            mask_m_coords = np.argwhere(mask_m).astype(np.float32)
-            if coords is None:
-                coords = np.copy(mask_m_coords)
-            else:
-                coords = np.concatenate((coords, mask_m_coords))
 
-    mask = np.moveaxis(mask, 0, -1)  # swap axes so they are in x,y,z order
+    mask = np.moveaxis(mask, 0, -1)  # swap axes so they are in y,x,z order
+    mask = np.moveaxis(mask,0,1) # swap axes so they are in x,y,z order
     # Check for multiple connected components and keep the biggest one
-    mask = get_largest_CC(mask)
+    mask_large = get_largest_CC(mask)
     # Get only the slices where there is part of the segmentation
     slices = []
-    for i in range(mask.shape[2]):
-        if np.argwhere(mask[:,:,i]).astype(np.float32).size != 0:
+    for i in range(mask_large.shape[2]):
+        if np.argwhere(mask_large[:,:,i]).astype(np.float32).size != 0:
             slices.append(i)
     # smooth slices
     if smooth_slices:
         for i in range(len(slices)):
-            mask[:, :, slices[i]] = smooth_mask(mask[:, :, slices[i]], n_iter=1)
+            mask_large[:, :, slices[i]] = smooth_mask(mask_large[:, :, slices[i]], n_iter=1)
 
-    contours_3d, covers = contour_from_3dmask(mask, slices, n_interp)
+    contours_3d, covers = contour_from_3dmask(mask_large, slices, n_interp)
 
     M1 = result.direction
     T1 = np.array(result.origin).reshape(-1, 1)
     sp = np.array(result.spacing).reshape(-1, 1)
     add_row = np.array([0, 0, 0, 1]).reshape(-1, 1).T
-    transf_mat = np.append(np.append(np.multiply(M1, sp), T1, axis=1), add_row, axis=0)
+    
+    sp_matrix = np.array([[sp[0,0],0,0],[0,sp[1,0],0],[0,0,sp[2,0]]])
+    rotation_scaling = np.matmul(M1,sp_matrix)
+
+    transf_mat = np.append(np.append(rotation_scaling, T1, axis=1), add_row, axis=0)
     return contours_3d, covers, transf_mat
 
 
@@ -384,7 +382,7 @@ def get_mask_dicom(directory, n_interp: int = 10, smooth_slices: bool = True):
                 im_pos_M = np.array(
                     ds.ImagePositionPatient)  # Image position of the first slice to compute the transformation matrix M
                 im_or = np.array(ds.ImageOrientationPatient)  # Image orientation
-                slice_thickness = float(ds.SliceThickness)  # Slice thickness
+                # slice_thickness = float(ds.SliceThickness)  # Slice thickness
                 pix_sp = np.array(ds.PixelSpacing)  # Pixel spacing
                 first_slice = False
                 # Transformation matrix
@@ -415,7 +413,7 @@ def get_mask_dicom(directory, n_interp: int = 10, smooth_slices: bool = True):
     return contours_3d, covers, transf_mat
 
 
-def get_mask_nifti(filename: str, n_interp: int = 10, smooth_slices: bool = True, ):
+def get_mask_nifti(filename: str, mask_id=[0], n_interp: int = 10, smooth_slices: bool = True):
     """
     Retrieves the surface points of the 3D volume defined by a NIfTI file.
     
@@ -423,6 +421,8 @@ def get_mask_nifti(filename: str, n_interp: int = 10, smooth_slices: bool = True
     ----------
     filename : str 
         Path to the NIfTI file.
+        
+    mask_id : int default = 0. If 0 all masks are merged into a single point cloud
     
     n_interp : int
         Number of slices interpolated between every consecutive original slices. Default = 10.
@@ -445,7 +445,30 @@ def get_mask_nifti(filename: str, n_interp: int = 10, smooth_slices: bool = True
 
     nifti_file = nib.load(filename)
     transf_mat = nifti_file.affine
-    mask = np.array(nifti_file.dataobj)
+    mask_data = np.array(nifti_file.dataobj)
+    
+    
+    if (len(mask_id) == 1) and (mask_id[0] != 0):
+        mask = (mask_data.astype(int) == mask_id[0]).astype(np.float64)
+        coords = np.argwhere(mask).astype(np.float32)  # WARNING: coords as (z,x,y)
+    else:
+        if (len(mask_id) == 1) and (mask_id[0] == 0):  # mask_id = [0] means get all masks
+            mask_ids = np.unique(mask_data)
+            mask_ids = mask_ids[mask_ids > 0]
+        else:
+            mask_ids = mask_id
+        mask = np.zeros(mask_data.shape)
+        coords = None
+        for m in mask_ids:
+            mask_m = mask_data == m
+            mask += mask_m
+            mask_m_coords = np.argwhere(mask_m).astype(np.float32)
+            if coords is None:
+                coords = np.copy(mask_m_coords)
+            else:
+                coords = np.concatenate((coords, mask_m_coords))
+    
+    
     # Check for multiple connected components and keep the biggest one
     mask = get_largest_CC(mask)
     # Find the slices that contain the segmentation

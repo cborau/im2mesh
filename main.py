@@ -303,7 +303,7 @@ if __name__ == "__main__":
             z_size = set_z_size()
         else:
             z_size = 1.0
-        if input_format.lower() == 'dicom-seg':
+        if input_format.lower() == 'dicom-seg' or input_format.lower() == 'nifti':
             mask_id = set_mask_id()
         else:
             mask_id = [0]
