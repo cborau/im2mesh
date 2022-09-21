@@ -13,7 +13,8 @@ def stl_from_3dply(total_points_3d,
                    output_prefix: str, 
                    target_faces: int = 5000,
                    boundary_weight: float = 0.5,
-                   sampling_factor: float = 0.1):
+                   sampling_factor: float = 0.1,
+                   laplacian_smoothing: bool = True):
     """
     
     Creates a 3D STL object from a given 3D point cloud using the pymeshlab library.
@@ -60,7 +61,6 @@ def stl_from_3dply(total_points_3d,
     ms.apply_filter('generate_surface_reconstruction_screened_poisson',
                     depth=8)  # Apply filter to reconstruct the surface based on those normals and the set of points
     ms.apply_filter('meshing_remove_duplicate_vertices')
-    ms.apply_filter('apply_coord_hc_laplacian_smoothing')  # Smooth the surface obtained
     # ms.save_current_mesh('step1.stl') # Save the obatined surface as an STL file
     ms.apply_filter('meshing_decimation_quadric_edge_collapse', targetfacenum=target_faces, planarquadric=True,
                     autoclean=True, qualitythr=0.9, planarweight=0.1,
@@ -71,7 +71,8 @@ def stl_from_3dply(total_points_3d,
     # #planarweight is related to the previous feature. 0.1 seems to be the sweet spot for the cases avalible currently
     ms.apply_filter('meshing_remove_duplicate_vertices')
     ms.apply_filter('meshing_remove_duplicate_faces')
-    ms.apply_filter('apply_coord_hc_laplacian_smoothing')  # Smooth the simplified surface
+    if laplacian_smoothing:
+        ms.apply_filter('apply_coord_hc_laplacian_smoothing')  # Smooth the simplified surface
     ms.save_current_mesh(os.path.join(output_dir, output_prefix + ".stl"))  # Save the obatined surface as an STL file
     os.remove(os.path.join(output_dir, output_prefix+".ply"))
     return

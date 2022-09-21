@@ -119,6 +119,15 @@ def set_sampling_factor():
     sampling_factor = enterbox(text, title, default="0.1")
     return float(sampling_factor)
 
+def select_laplacian():
+    text = ("Do you want to perform smooth the reconstructed STL prior to generating the 3D mesh?\n"
+            "The surface mesh will be smoothed using the Laplacian Smoothing Method")
+
+    # window title
+    title = "Laplacian Smoothing"
+
+    return_laplacian = boolbox(text, title, ('Yes', 'No'), default_choice='Yes')
+    return return_laplacian
 
 def set_mesh_size():
     text = ("Min. mesh size: Minimum element size of the mesh created.\n"
@@ -169,6 +178,14 @@ def select_vtk():
     export_vtk = boolbox(text, title, ('Yes', 'No'), default_choice='Yes')
     return export_vtk
 
+def select_visualization():
+    text = "Do you want to view the 3D representation of the external pointcloud prior to STL reconstruction?"
+
+    # window title
+    title = "View pointcloud"
+
+    view_pcd = boolbox(text, title, ('Yes', 'No'), default_choice='No')
+    return view_pcd
 
 def mesh_format_selection():
     text = ("Select the mesh format:\n"
@@ -185,9 +202,9 @@ def mesh_format_selection():
 
 
 def main(selected_path, input_format, n_interp=10, smooth_slices=False, z_size=30.0, mask_id=[0], target_faces=50000,
-         boundary_weight=0.5, sampling_factor=0.1, min_mesh_size=2.5, max_mesh_size=2.5, output_dir: str = os.getcwd(),
+         boundary_weight=0.5, sampling_factor=0.1, laplacian_smoothing=True, min_mesh_size=2.5, max_mesh_size=2.5, output_dir: str = os.getcwd(),
          output_prefix: str = 'output',
-         save_centroids=False, export_vtk=False, mesh_format=None):
+         save_centroids=False, export_vtk=False, mesh_format=None, view_pcd=False):
     contours_3d, covers, transf_mat = fmt_r.get_mask(selected_path=selected_path,
                                                      file_format=input_format.lower(),
                                                      n_interp=n_interp,
@@ -197,7 +214,8 @@ def main(selected_path, input_format, n_interp=10, smooth_slices=False, z_size=3
                                                      )
     external_points = np.append(contours_3d, covers, axis=0)
     total_points_3d = fmt_r.voxel2space(transf_mat, external_points)
-    vis.show_point_cloud(total_points_3d)
+    if view_pcd:
+        vis.show_point_cloud(total_points_3d)
     output_file_prefix = output_prefix
     ouput_path = os.path.join(output_dir, output_prefix)
     fmt_w.stl_from_3dply(total_points_3d,
@@ -205,7 +223,8 @@ def main(selected_path, input_format, n_interp=10, smooth_slices=False, z_size=3
                          output_prefix,
                          target_faces,
                          boundary_weight,
-                         sampling_factor
+                         sampling_factor,
+                         laplacian_smoothing
                          )
     nodes, elements = fmt_w.mesh3d_from_stl(output_dir,
                                             output_prefix,
@@ -249,7 +268,7 @@ if __name__ == "__main__":
     parser.add_argument('--z_size', type=float, default=30.0,
                         help=("Distance between consecutive slices.\n"
                               "Default is 1.0"))
-    parser.add_argument('--mask_id', help='Input mask ids delimited by commas. Only necessary for DICOM-SEG inputs.',
+    parser.add_argument('--mask_id', help='Input mask ids delimited by commas. Only necessary for DICOM-SEG and NIfTI inputs.',
                         type=lambda s: [int(item) for item in s.split(',')])
     parser.add_argument('--smooth_slices', action='store_true',
                         help="If True, the slices will be smooothed before interpolating them.")
@@ -263,6 +282,8 @@ if __name__ == "__main__":
     parser.add_argument('--sampling_factor', type=float, default=0.1,
                         help=("Reduction ratio applied to the initial pointcloud.\n"
                               "Default is 0.1."))
+    parser.add_argument('--laplacian_smoothing', action='store_true',
+                        help="If True the algorithm will smooth the STL following the Laplacian Smoothing Method.")
     parser.add_argument('--min_mesh_size', type=float, default=2.5,
                         help="Minimum element size of the mesh created.\nDefault is 2.5 mm")
     parser.add_argument('--max_mesh_size', type=float, default=2.5,
@@ -277,15 +298,17 @@ if __name__ == "__main__":
                         help="If True, the obtained mesh will be exported as a .vtk file.")
     parser.add_argument('--mesh_format', type=str, default=None,
                         help="Choose the mesh format: Abaqus or Ansys.")
+    parser.add_argument('--view_pcd', action='store_true',
+                        help="If True an additional window will show the 3D visualization of the pointcloud before reconstructing the STL")
 
     args = parser.parse_args()
 
     if args.batch:
         main(args.path, args.format, args.n_interp, args.smooth_slices,
              args.z_size, args.mask_id,
-             args.target_faces, args.boundary_weight, args.sampling_factor, args.min_mesh_size,
-             args.max_mesh_size, args.output_dir, args.output_prefix, args.save_centroids, args.export_vtk,
-             args.mesh_format)
+             args.target_faces, args.boundary_weight, args.sampling_factor, args.laplacian_smoothing,
+             args.min_mesh_size, args.max_mesh_size, args.output_dir, args.output_prefix, args.save_centroids, 
+             args.export_vtk, args.mesh_format)
     else:
         input_format = file_folder_selection()
         if input_format is None:
@@ -311,6 +334,7 @@ if __name__ == "__main__":
         target_faces = set_target_faces()
         boundary_weight = set_boundary_weight()
         sampling_factor = set_sampling_factor()
+        laplacian_smoothing = select_laplacian()
         min_mesh_size, max_mesh_size = set_mesh_size()
         message_out_dir(os.getcwd())
         output_dir = diropenbox(msg="Choose a destination folder")
@@ -318,6 +342,7 @@ if __name__ == "__main__":
         save_centroids = select_centroids()
         export_vtk = select_vtk()
         mesh_format = mesh_format_selection()
+        view_pcd = select_visualization()
         main(selected_path=selected_path,
              input_format=input_format,
              n_interp=n_interp,
@@ -326,10 +351,13 @@ if __name__ == "__main__":
              smooth_slices=smooth_slices,
              target_faces=target_faces,
              boundary_weight=boundary_weight,
+             sampling_factor=sampling_factor,
+             laplacian_smoothing=laplacian_smoothing,
              min_mesh_size=min_mesh_size,
              max_mesh_size=max_mesh_size,
              output_dir=output_dir,
              output_prefix=output_prefix,
              save_centroids=save_centroids,
              export_vtk=export_vtk,
-             mesh_format=mesh_format)
+             mesh_format=mesh_format,
+             view_pcd=view_pcd)
