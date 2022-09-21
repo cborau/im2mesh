@@ -170,6 +170,8 @@ def smooth_mask(img, n_iter=1, circle_size=5):
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (circle_size, circle_size))
     image_er = cv2.erode(img, kernel, iterations=n_iter)
     image_er_dil = cv2.dilate(image_er, kernel, iterations=n_iter)
+    # image_dil = cv2.dilate(img, kernel, iterations=n_iter)
+    # image_dil_er = cv2.erode(image_dil, kernel, iterations=n_iter)
     if image_er_dil.max() == 0.0:
         print('Structuring element size ({0} pixels) was too big and eroded the entire slice'.format(circle_size))
         print('Returning original slice instead')
@@ -306,18 +308,18 @@ def get_mask_dcmseg(filename: str, mask_id=[0], n_interp=10, smooth_slices=True)
     mask = np.moveaxis(mask, 0, -1)  # swap axes so they are in y,x,z order
     mask = np.moveaxis(mask,0,1) # swap axes so they are in x,y,z order
     # Check for multiple connected components and keep the biggest one
-    mask_large = get_largest_CC(mask)
+    mask_label = get_largest_CC(mask)
     # Get only the slices where there is part of the segmentation
     slices = []
-    for i in range(mask_large.shape[2]):
-        if np.argwhere(mask_large[:,:,i]).astype(np.float32).size != 0:
+    for i in range(mask_label.shape[2]):
+        if np.argwhere(mask_label[:,:,i]).astype(np.float32).size != 0:
             slices.append(i)
     # smooth slices
     if smooth_slices:
         for i in range(len(slices)):
-            mask_large[:, :, slices[i]] = smooth_mask(mask_large[:, :, slices[i]], n_iter=1)
+            mask_label[:, :, slices[i]] = smooth_mask(mask_label[:, :, slices[i]], n_iter=1)
 
-    contours_3d, covers = contour_from_3dmask(mask_large, slices, n_interp)
+    contours_3d, covers = contour_from_3dmask(mask_label, slices, n_interp)
 
     M1 = result.direction
     T1 = np.array(result.origin).reshape(-1, 1)
@@ -449,8 +451,7 @@ def get_mask_nifti(filename: str, mask_id=[0], n_interp: int = 10, smooth_slices
     
     
     if (len(mask_id) == 1) and (mask_id[0] != 0):
-        mask = (mask_data.astype(int) == mask_id[0]).astype(np.float64)
-        coords = np.argwhere(mask).astype(np.float32)  # WARNING: coords as (z,x,y)
+        mask = ((np.rint(mask_data)).astype(int) == mask_id[0]).astype(np.float64)
     else:
         if (len(mask_id) == 1) and (mask_id[0] == 0):  # mask_id = [0] means get all masks
             mask_ids = np.unique(mask_data)
@@ -458,26 +459,20 @@ def get_mask_nifti(filename: str, mask_id=[0], n_interp: int = 10, smooth_slices
         else:
             mask_ids = mask_id
         mask = np.zeros(mask_data.shape)
-        coords = None
         for m in mask_ids:
             mask_m = mask_data == m
             mask += mask_m
             mask_m_coords = np.argwhere(mask_m).astype(np.float32)
-            if coords is None:
-                coords = np.copy(mask_m_coords)
-            else:
-                coords = np.concatenate((coords, mask_m_coords))
-    
     
     # Check for multiple connected components and keep the biggest one
-    mask = get_largest_CC(mask)
+    mask_label = get_largest_CC(mask)
     # Find the slices that contain the segmentation
-    slices = np.unique(np.nonzero(mask)[-1])
+    slices = np.unique(np.nonzero(mask_label)[-1])
     # smooth slices
     if smooth_slices:
         for i in range(len(slices)):
-            mask[:, :, slices[i]] = smooth_mask(mask[:, :, slices[i]], n_iter=1)
-    contours_3d, covers = contour_from_3dmask(mask, slices, n_interp)
+            mask_label[:, :, slices[i]] = smooth_mask(mask_label[:, :, slices[i]], n_iter=1)
+    contours_3d, covers = contour_from_3dmask(mask_label, slices, n_interp)
 
     return contours_3d, covers, transf_mat
 

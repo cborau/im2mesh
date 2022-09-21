@@ -113,6 +113,9 @@ def mesh3d_from_stl(output_dir: str,
     s = gmsh.model.getEntities(2)
     surf = gmsh.model.geo.addSurfaceLoop([e[1] for e in s])
     gmsh.model.geo.addVolume([surf]) #create volume from surface
+    gmsh.model.geo.removeAllDuplicates()
+    gmsh.model.geo.synchronize()
+    gmsh.model.geo.removeAllDuplicates()
     gmsh.model.geo.synchronize()
     gmsh.option.setNumber('Mesh.Algorithm', 1)
     gmsh.option.setNumber('Mesh.MeshSizeMax', max_mesh_size)
