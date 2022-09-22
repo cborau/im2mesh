@@ -136,8 +136,17 @@ def set_mesh_size():
 
     # window title
     title = "Set mesh size"
-    min_mesh_size, max_mesh_size = enumerate(multenterbox(text, title, ['Minimim mesh size', 'Maximum mesh size']))
-    return float(min_mesh_size[1]), float(max_mesh_size[1])
+    min_mesh_values, max_mesh_values = enumerate(multenterbox(text, title, ['Minimim mesh size', 'Maximum mesh size']))
+    #Set default values
+    if len(min_mesh_values[1])==0:
+        min_mesh_size=2.5
+    elif len(min_mesh_values[1])>0:
+        min_mesh_size = float(min_mesh_values[1])
+    if len(max_mesh_values[1])==0:
+        max_mesh_size = 2.5
+    elif len(max_mesh_values[1])>0:
+        max_mesh_size = float(max_mesh_values[1])
+    return min_mesh_size, max_mesh_size
 
 
 def message_out_dir(current_folder):
