@@ -1,5 +1,5 @@
 Installation
-=====
+============
 To use im2mesh, first install it using pip:
 
 .. code-block:: console

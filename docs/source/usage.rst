@@ -4,11 +4,11 @@ Usage
    :depth: 2
 
 Examples of batch usage
-------------
+-----------------------
 You can find simple working examples under the /examples folder.
 Parameters used are defined in params.txt for each example.
 
-:caption: Example 1:
+**Example 1:**
 
 ::
 
@@ -20,12 +20,6 @@ Parameters used are defined in params.txt for each example.
 
 
 
-
-Modules
-------------
-.. automodapi:: main
-   :no-inheritance-diagram:
-   
 .. automodapi:: formatreader
    :no-inheritance-diagram:
 

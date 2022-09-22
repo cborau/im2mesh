@@ -82,17 +82,20 @@
 Images are automatically binarized via Otsu thresholding.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dirname</strong> – <p>The directory containing the images.</p>
-<dl class="simple">
-<dt>ext<span class="classifier">string</span></dt><dd><p>File extension (ej: .jpg, .png).</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirname</strong> (<em>string</em>) – The directory containing the images.</p></li>
+<li><p><strong>ext</strong> (<em>string</em>) – File extension (ej: .jpg, .png).</p></li>
+<li><p><strong>z_size</strong> (<em>float</em>) – Vertical distance between slices.</p></li>
+<li><p><strong>n_interp</strong> (<em>int</em>) – Number of slices interpolated between every consecutive original images. Default = 10.</p></li>
+<li><p><strong>smooth_slices</strong> (<em>bool</em>) – If True, original binarized images are smoothed via erosion/dilation operations. Default = True</p></li>
+</ul>
 </dd>
-<dt>z_size<span class="classifier">float</span></dt><dd><p>Vertical distance between slices.</p>
-</dd>
-<dt>n_interp<span class="classifier">int</span></dt><dd><p>Number of slices interpolated between every consecutive original images. Default = 10.</p>
-</dd>
-<dt>smooth_slices<span class="classifier">bool</span></dt><dd><p>If True, original binarized images are smoothed via erosion/dilation operations. Default = True</p>
-</dd>
-</dl>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>contours</strong> (<em>Numpy array</em>) – Contains the contours of every slice in voxel coordinates.</p></li>
+<li><p><strong>covers</strong> (<em>Numpy array</em>) – Contains the points from the top and bottom slices. Needed to close the .stl geometry.</p></li>
+<li><p><strong>transf_mat</strong> (<em>Numpy array</em>) – Transformation matrix to convert from voxel coordinates to space coordinates.</p></li>
+</ul>
 </p>
 </dd>
 </dl>

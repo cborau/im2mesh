@@ -151,19 +151,19 @@ def smooth_mask(img, n_iter=1, circle_size=5):
 
     Parameters
     ----------
-     img : Numpy array
+    img : Numpy array
         A 2D binarized image.
 
-     n_iter : int
+    n_iter : int
         Number of erosion/dilation operations to be performed.
 
-     circle_size : int
+    circle_size : int
         Size of the structuring element to perform the erosion/dilation operations.
 
 
-     Returns
-     -------
-     Numpy array
+    Returns
+    -------
+    Numpy array
         The smoothed version of the input image.
 
     """
@@ -179,6 +179,34 @@ def smooth_mask(img, n_iter=1, circle_size=5):
     return image_er_dil
 
 
+def dilate_countour(img, n_iter=1, circle_size=3):
+    """
+    Dilates the image to capture the external contour afterwards.
+
+    Parameters
+    ----------
+    img : Numpy array
+        A 2D binarized image.
+
+    n_iter : int
+        Number of erosion/dilation operations to be performed.
+
+    circle_size : int
+        Size of the structuring element to perform the dilation operation.
+
+
+    Returns
+    -------
+    Numpy array
+        The smoothed version of the input image.
+
+    """
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (circle_size, circle_size))
+    image_dil = cv2.dilate(img, kernel, iterations=n_iter)
+
+    return image_dil
+
+
 def get_mask_from_images(dirname, ext, z_size=30.0, n_interp=10, smooth_slices=True):
     """
     Retrieves the surface points of the 3D volume defined in multiple individual images.
@@ -189,28 +217,28 @@ def get_mask_from_images(dirname, ext, z_size=30.0, n_interp=10, smooth_slices=T
     dirname : string
         The directory containing the images.
 
-     ext : string
+    ext : string
         File extension (ej: .jpg, .png).
 
-     z_size : float
+    z_size : float
         Vertical distance between slices.
 
-     n_interp : int
+    n_interp : int
         Number of slices interpolated between every consecutive original images. Default = 10.
 
-     smooth_slices : bool
+    smooth_slices : bool
         If True, original binarized images are smoothed via erosion/dilation operations. Default = True
 
 
-     Returns
-     -------
-     contours : Numpy array
+    Returns
+    -------
+    contours : Numpy array
         Contains the contours of every slice in voxel coordinates.
 
-     covers : Numpy array
+    covers : Numpy array
         Contains the points from the top and bottom slices. Needed to close the .stl geometry.
 
-     transf_mat : Numpy array
+    transf_mat : Numpy array
         Transformation matrix to convert from voxel coordinates to space coordinates.
 
     """
@@ -468,6 +496,10 @@ def get_mask_nifti(filename: str, mask_id=[0], n_interp: int = 10, smooth_slices
     mask_label = get_largest_CC(mask)
     # Find the slices that contain the segmentation
     slices = np.unique(np.nonzero(mask_label)[-1])
+
+    # dilate contour
+    for i in range(len(slices)):
+        mask_label[:, :, slices[i]] = dilate_countour(mask_label[:, :, slices[i]], n_iter=1)
     # smooth slices
     if smooth_slices:
         for i in range(len(slices)):

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>mesh_format_selection &#8212; im2mesh 1.0 documentation</title>
+    <title>dilate_countour &#8212; im2mesh 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/cloud.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -37,7 +37,9 @@
     
 
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="get_largest_CC" href="formatreader.get_largest_CC.html" />
+    <link rel="prev" title="contour_from_3dmask" href="formatreader.contour_from_3dmask.html" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
   </head><body>
     <div class="relbar-top">
@@ -51,9 +53,16 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="formatreader.get_largest_CC.html" title="get_largest_CC"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="formatreader.contour_from_3dmask.html" title="contour_from_3dmask"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
     <li><a href="../index.html">im2mesh 1.0 documentation</a> &#187;</li>
 
-        <li class="nav-item nav-item-this"><a href="">mesh_format_selection</a></li> 
+          <li class="nav-item nav-item-1"><a href="../usage.html" accesskey="U">Usage</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">dilate_countour</a></li> 
       </ul>
     </div>
     </div>
@@ -64,12 +73,28 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="mesh-format-selection">
-<h1>mesh_format_selection<a class="headerlink" href="#mesh-format-selection" title="Permalink to this heading">¶</a></h1>
+  <section id="dilate-countour">
+<h1>dilate_countour<a class="headerlink" href="#dilate-countour" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="main.mesh_format_selection">
-<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">mesh_format_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.mesh_format_selection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="formatreader.dilate_countour">
+<span class="sig-prename descclassname"><span class="pre">formatreader.</span></span><span class="sig-name descname"><span class="pre">dilate_countour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circle_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#formatreader.dilate_countour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dilates the image to capture the external contour afterwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>Numpy array</em>) – A 2D binarized image.</p></li>
+<li><p><strong>n_iter</strong> (<em>int</em>) – Number of erosion/dilation operations to be performed.</p></li>
+<li><p><strong>circle_size</strong> (<em>int</em>) – Size of the structuring element to perform the dilation operation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The smoothed version of the input image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Numpy array</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -80,10 +105,20 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="formatreader.contour_from_3dmask.html"
+                          title="Previous page">&larr; contour_from_3dmask</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="formatreader.get_largest_CC.html"
+                          title="Next page">&rarr; get_largest_CC</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/main.mesh_format_selection.rst.txt"
+      <li><a href="../_sources/api/formatreader.dilate_countour.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -129,9 +164,16 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="formatreader.get_largest_CC.html" title="get_largest_CC"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="formatreader.contour_from_3dmask.html" title="contour_from_3dmask"
+             >previous</a> &nbsp; &nbsp;</li>
     <li><a href="../index.html">im2mesh 1.0 documentation</a> &#187;</li>
 
-        <li class="nav-item nav-item-this"><a href="">mesh_format_selection</a></li> 
+          <li class="nav-item nav-item-1"><a href="../usage.html" >Usage</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">dilate_countour</a></li> 
       </ul>
     </div>
     </div>
