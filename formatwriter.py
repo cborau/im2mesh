@@ -21,7 +21,13 @@ def stl_from_3dply(total_points_3d,
     It generates an intermediate .ply file where the point cloud is saved(generated for debugging purposes).
     
     Parameters
-    ----------
+    ----------        
+    output_dir : string
+        Destination folder
+        
+    output_prefix : string
+        Prefix for output files
+        
     total_points_3d : numpy array
         Pointcloud (Nx3 dimensions)
     
@@ -39,13 +45,11 @@ def stl_from_3dply(total_points_3d,
         of the simplified pointcloud. 
         Reduced number of points = sampling_factor * initial number of points
         Defaults to 0.1. Low values are recommended for the robustness of the algorithm.
-    
-    filename_output : string
-        Name of the output file containing the STL object
+        
+    laplacian_smoothing : bool
+        If True, the reconstructed surface is smoothed using the Laplacian Smoothing Method
 
     """
-    # target_faces is the total number of faces of the final STL (approx)
-    # boundary_weight sets the importance of the boundary on the simplification algorithm. The higher, the more unaffected the boundary is.
 
     # First we save the pointcloud in a file format which is compatible with meshlab
     pcd = o3d.geometry.PointCloud()
@@ -61,6 +65,9 @@ def stl_from_3dply(total_points_3d,
     ms.apply_filter('generate_surface_reconstruction_screened_poisson',
                     depth=8)  # Apply filter to reconstruct the surface based on those normals and the set of points
     ms.apply_filter('meshing_remove_duplicate_vertices')
+    ms.apply_filter('meshing_remove_connected_component_by_diameter')
+    if laplacian_smoothing:
+        ms.apply_filter('apply_coord_hc_laplacian_smoothing')
     # ms.save_current_mesh('step1.stl') # Save the obatined surface as an STL file
     ms.apply_filter('meshing_decimation_quadric_edge_collapse', targetfacenum=target_faces, planarquadric=True,
                     autoclean=True, qualitythr=0.9, planarweight=0.1,
@@ -91,15 +98,15 @@ def mesh3d_from_stl(output_dir: str,
     Returns two arrays containing node coordinates and element connectivity, respectively.
     
     Parameters
-    ----------
-    max_mesh_size, min_mesh_size : float
-        Maximum and minimum size for the elements
-    
+    ----------    
     output_prefix : string
         Prefix for output files
         
     output_dir : string
         Destination folder
+        
+    max_mesh_size, min_mesh_size : float
+        Maximum and minimum size for the elements
         
     export_vtk : boolean
         If True exports the mesh as a .vtk file
@@ -114,8 +121,6 @@ def mesh3d_from_stl(output_dir: str,
     s = gmsh.model.getEntities(2)
     surf = gmsh.model.geo.addSurfaceLoop([e[1] for e in s])
     gmsh.model.geo.addVolume([surf]) #create volume from surface
-    gmsh.model.geo.removeAllDuplicates()
-    gmsh.model.geo.synchronize()
     gmsh.model.geo.removeAllDuplicates()
     gmsh.model.geo.synchronize()
     gmsh.option.setNumber('Mesh.Algorithm', 1)
@@ -150,8 +155,9 @@ def mesh3d_from_stl(output_dir: str,
         print('... done')
         print('Exporting the array to a csv file')
         np.savetxt(os.path.join(output_dir,"centroid_elems.csv"), centroid_elems, delimiter=",")
-        
-    return unique_nodes_coords, elems_connectivity
+    else:
+        centroid_elems = None
+    return unique_nodes_coords, elems_connectivity, centroid_elems
 
 
 def write_ansys_inp(nodes,

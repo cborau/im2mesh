@@ -93,8 +93,8 @@ def get_mask(selected_path: str, file_format: str, n_interp: int = 10, smooth_sl
             contours, covers, transf_mat = get_mask_from_images(selected_path, ext, z_size=z_size, n_interp=n_interp,
                                                                 smooth_slices=smooth_slices)
         else:
-            print(
-                '{file} is not a valid format. When choosing a path to a file, only DICOM and NIfTI formats are supported.'.format(
+            raise Exception(
+                '{file} is not a valid format. When choosing a path to a file, only DICOM-SEG and NIfTI formats are supported.'.format(
                     file=selected_path))
     elif os.path.isdir(selected_path):
         if file_format == 'dicom':
@@ -124,25 +124,6 @@ def get_mask(selected_path: str, file_format: str, n_interp: int = 10, smooth_sl
     else:
         print('Not such file or directory: {file}'.format(file=selected_path))
     return contours, covers, transf_mat
-
-
-def get_numbers_from_filename(filename):
-    """
-    Read numbers in a filename. If there are various numbers, only returns the first occurrence.
-    E.g. in 'this1is25a_test001' the function only returns '1'.
-
-    Parameters
-    ----------
-    filename : string
-        Name of the file
-
-    Returns
-    -------
-    s : string
-        Returns the number found.
-
-    """
-    return re.search(r'\d+', filename).group(0)
 
 
 def smooth_mask(img, n_iter=1, circle_size=5):
@@ -189,7 +170,7 @@ def dilate_countour(img, n_iter=1, circle_size=3):
         A 2D binarized image.
 
     n_iter : int
-        Number of erosion/dilation operations to be performed.
+        Number of dilation operations to be performed.
 
     circle_size : int
         Size of the structuring element to perform the dilation operation.
@@ -398,11 +379,11 @@ def get_mask_dicom(directory, n_interp: int = 10, smooth_slices: bool = True):
     img_init = ds_init.pixel_array
     mask = np.empty((img_init.shape[0],img_init.shape[1], n_files)) #Initialize empty mask array with initial image size
     first_slice = True
-    for file in os.listdir(directory):
+    for file in sorted(os.listdir(directory)):
         if file.endswith(".dcm"):
             ds = pyd.dcmread(Path(directory, file))
             img = ds.pixel_array
-            slice_number = int(get_numbers_from_filename(file))
+            slice_number = sorted(os.listdir(directory)).index(file)
             mask[:,:,slice_number] = img
             # Extract the necessary parameters from DICOM header
             im_pos = list(map(float, ds.ImagePositionPatient))  # Image position
@@ -490,7 +471,6 @@ def get_mask_nifti(filename: str, mask_id=[0], n_interp: int = 10, smooth_slices
         for m in mask_ids:
             mask_m = mask_data == m
             mask += mask_m
-            mask_m_coords = np.argwhere(mask_m).astype(np.float32)
     
     # Check for multiple connected components and keep the biggest one
     mask_label = get_largest_CC(mask)
