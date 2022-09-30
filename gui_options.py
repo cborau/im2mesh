@@ -32,8 +32,10 @@ def select_input_format_data():
     button_list = []
     button1 = "DICOM"
     button2 = "NIfTI"
+    button3 = "CSV"
     button_list.append(button1)
     button_list.append(button2)
+    button_list.append(button3)
     input_ft_data = buttonbox(text, title, button_list)
     return input_ft_data
 

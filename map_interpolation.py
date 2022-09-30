@@ -147,6 +147,13 @@ def main(im_data_path: str, input_format_data: str, output_dir: str, interp_meth
             coords, values = load_data_nifti(im_data_path)
             print("Done")
             interpolate_data(coords, values, centroids, output_dir, interp_method)
+        
+        elif input_format_data.lower() == 'csv':
+            print("Loading imaging data...")
+            csv_data = np.genfromtxt(im_data_path, delimiter=',')
+            coords, values = csv_data[:,:3], csv_data[:,3]
+            print("Done")
+            interpolate_data(coords, values, centroids, output_dir, interp_method)
         else:
             raise Exception(
                 '{file} is not a valid format. When choosing a path to a file, only NIfTI format is supported.'.format(
@@ -176,7 +183,8 @@ if __name__ == "__main__":
     parser.add_argument('--input_format_data', type=str,
                         help="Image data file format. Recognized formats: DICOM and NIfTI.\n"
                               "If the input is a NIfTI file, --im_data_path must "
-                              "be a file path. Else, it must be a folder path.")
+                              "be a file path. Else, it must be a folder path.\n"
+                              "Additionally, a CSV containing a list of coordinates and values can be chosen as the input.")
     parser.add_argument('--output_dir', type=str, default=os.getcwd(),
                         help="Path to output folder.")
     parser.add_argument('--interp_method', type=str,
@@ -195,7 +203,9 @@ if __name__ == "__main__":
         elif input_format_data.lower() == 'dicom':
             message_folder(input_format_data)
             im_data_path = diropenbox(msg="Choose a folder")
-        else:
+        elif input_format_data.lower() == 'nifti':
+            im_data_path = fileopenbox(msg="Select the input file")
+        elif input_format_data.lower() == 'csv':
             im_data_path = fileopenbox(msg="Select the input file")
         if im_data_path is None:
             sys.exit("Invalid path")

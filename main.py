@@ -17,7 +17,7 @@ import argparse
 import sys
 import os
 from gui_options import *
-from maps_interpolation import main as main_interp
+from map_interpolation import main as main_interp
 
 
 def main(selected_path, input_format, input_format_data, im_data_path: str, n_interp=10, smooth_slices=False, z_size=30.0, mask_id=[0], target_faces=50000,
@@ -139,7 +139,8 @@ if __name__ == "__main__":
     parser.add_argument('--input_format_data', type=str,
                         help="Image data file format. Recognized formats: DICOM and NIfTI.\n"
                               "If the input is a NIfTI file, --im_data_path must "
-                              "be a file path. Else, it must be a folder path.")
+                              "be a file path. Else, it must be a folder path.\n"
+                              "Additionally, a CSV containing a list of coordinates and values can be chosen as the input.")
     parser.add_argument('--im_data_path', type=str,
                         help="Path to imaging data file or folder.")
     args = parser.parse_args()
