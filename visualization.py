@@ -15,10 +15,9 @@ def show_point_cloud(coords):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(coords)
     o3d.visualization.draw_geometries([pcd])
-    # o3d.visualization.draw_geometries([pcd.paint_uniform_color([1, 0, 0])])
 
 
-# Print iterations progress
+
 def progressbar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='#', print_end=''):
     """
     Call in a loop to create terminal progress bar

@@ -18,10 +18,12 @@ def stl_from_3dply(total_points_3d,
     """
     
     Creates a 3D STL object from a given 3D point cloud using the pymeshlab library.
-    It generates an intermediate .ply file where the point cloud is saved(generated for debugging purposes).
+    It generates (and deletes) an intermediate .ply file where the point cloud is saved(generated for debugging purposes).
     
     Parameters
-    ----------        
+    ----------   
+    total_points_3d : Numpy Array
+        Array (Npoints x 3) containing the coordinates of the pointcloud that defines the external contours
     output_dir : string
         Destination folder
         
@@ -99,11 +101,11 @@ def mesh3d_from_stl(output_dir: str,
     
     Parameters
     ----------    
-    output_prefix : string
-        Prefix for output files
-        
     output_dir : string
         Destination folder
+        
+    output_prefix : string
+        Prefix for output files
         
     max_mesh_size, min_mesh_size : float
         Maximum and minimum size for the elements

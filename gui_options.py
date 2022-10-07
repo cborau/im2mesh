@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Sep 28 12:04:28 2022
-
-@author: Diego
-"""
+''' Code containing all GUI functions'''
 
 from easygui import *
 

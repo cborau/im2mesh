@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Sep 22 15:15:59 2022
-
-@author: Diego
-"""
+''' Code containing all functions related to imaging data reading and interpolation'''
 
 import numpy as np
 from scipy.interpolate import griddata
@@ -112,18 +107,20 @@ def interpolate_data(coords, values, centroids,
                      output_dir: str,
                      interp_method: str = 'nearest'):
     """
-    
-
     Parameters
     ----------
     coords : Numpy array
         Contains the spatial coordinates of the z-stacked images.
+        
     values : Numpy array
         Contains the parameter values for each of the points in coords array.
+        
     centroids : Numpy array 
         Centroids of the elements in the 3D mesh generated previously
+        
     output_dir : string
         Destination folder
+        
     method : str, optional
         Method used in the Scipy's griddata interpolation function. The default is 'nearest'.
 

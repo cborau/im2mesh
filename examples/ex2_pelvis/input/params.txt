@@ -1,1 +1,1 @@
-python main.py -b --path "./examples/ex2_pelvis/input/pelvis.nii" --format "nifti" --n_interp 5 --mask_id 0  --target_faces 50000 --sampling_factor 0.1 --min_mesh_size 5.0 --max_mesh_size 5.0 --output_dir "./examples/ex2_pelvis/output" --export_vtk
+python main.py -b --path "./examples/ex2_pelvis/input/pelvis.nii" --format "nifti" --n_interp 5 --mask_id 0 --smooth_slices  --target_faces 50000 --sampling_factor 0.1 --min_mesh_size 5.0 --max_mesh_size 5.0 --output_dir "./examples/ex2_pelvis/output" --export_vtk --laplacian_smoothing

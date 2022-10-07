@@ -51,17 +51,17 @@ def get_mask(selected_path: str, file_format: str, n_interp: int = 10, smooth_sl
     file_format : string
         File format chosen in the GUI (nifti, tiff, dicom-seg, image).
     
-    n_interp : int
-        Number of interpolated slices to generate between two real slices. The default is 10.
+    n_interp : int default = 10
+        Number of interpolated slices to generate between two real slices.
 
-    smooth_slices : boolean
-        If True, calls the function smooth_mask() on each of the real slices. The default is True.
+    smooth_slices : boolean default = True
+        If True, calls the function smooth_mask() on each of the real slices.
 
     **kwargs
         Additional keyword arguments passed.
-        mask_id : list of int
+        mask_id : list of int defatult = [0]
             Merge the specified mask ids into a single volume.
-            Default = [0]. If [0] all masks are merged into a single point cloud.
+            If [0] all masks are merged into a single point cloud.
         zsize : float
             Distance between slices. Needed when loading slices from multiple single images.
 
@@ -135,10 +135,10 @@ def smooth_mask(img, n_iter=1, circle_size=5):
     img : Numpy array
         A 2D binarized image.
 
-    n_iter : int
+    n_iter : int default = 1
         Number of erosion/dilation operations to be performed.
 
-    circle_size : int
+    circle_size : int default = 5
         Size of the structuring element to perform the erosion/dilation operations.
 
 
@@ -169,11 +169,11 @@ def dilate_countour(img, n_iter=1, circle_size=3):
     img : Numpy array
         A 2D binarized image.
 
-    n_iter : int
-        Number of dilation operations to be performed.
+    n_iter : int default = 1
+        Number of dilation operations to be performed. 
 
-    circle_size : int
-        Size of the structuring element to perform the dilation operation.
+    circle_size : int default = 3
+        Size of the structuring element to perform the dilation operation. 
 
 
     Returns
@@ -199,16 +199,16 @@ def get_mask_from_images(dirname, ext, z_size=30.0, n_interp=10, smooth_slices=T
         The directory containing the images.
 
     ext : string
-        File extension (ej: .jpg, .png).
+        File extension (e.g.: .jpg, .png).
 
-    z_size : float
-        Vertical distance between slices.
+    z_size : float default = 30.0
+        Vertical distance between slices. 
 
-    n_interp : int
-        Number of slices interpolated between every consecutive original images. Default = 10.
+    n_interp : int default = 10
+        Number of slices interpolated between every consecutive original images.
 
-    smooth_slices : bool
-        If True, original binarized images are smoothed via erosion/dilation operations. Default = True
+    smooth_slices : bool default = True
+        If True, original binarized images are smoothed via erosion/dilation operations.
 
 
     Returns
@@ -272,18 +272,19 @@ def get_mask_dcmseg(filename: str, mask_id=[0], n_interp=10, smooth_slices=True)
     ----------
     filename : str must be .dcm format
     
-    mask_id : int default = 0. If 0 all masks are merged into a single point cloud
+    mask_id : list of int defatult = [0]
+    If 0 all masks are merged into a single point cloud.
 
-    n_interp : int
-        Number of slices interpolated between every consecutive original slices. Default = 10.
+    n_interp : int default = 10
+        Number of slices interpolated between every consecutive original slices. 
 
-    smooth_slices : bool
-        If True, binary slices are smoothed via erosion/dilation operations. Default = True
+    smooth_slices : boolean default = True
+        If True, binary slices are smoothed via erosion/dilation operations. 
 
 
     Returns
     -------
-    contours : Numpy array
+    contours_3d : Numpy array
         Contains the contours of every slice in voxel coordinates.
 
     covers : Numpy array
@@ -351,16 +352,16 @@ def get_mask_dicom(directory, n_interp: int = 10, smooth_slices: bool = True):
     directory : str 
         Path to the folder containing the DICOM files.
     
-    n_interp : int
-        Number of slices interpolated between every consecutive original slices. Default = 10.
+    n_interp : int default = 10
+        Number of slices interpolated between every consecutive original slices. 
 
-    smooth_slices : boolean
-        If True, binary slices are smoothed via erosion/dilation operations. Default = True
+    smooth_slices : boolean default = True
+        If True, binary slices are smoothed via erosion/dilation operations. 
 
 
     Returns
     -------
-    contours : Numpy array
+    contours_3d : Numpy array
         Contains the contours of every slice in voxel coordinates.
 
     covers : Numpy array
@@ -433,13 +434,14 @@ def get_mask_nifti(filename: str, mask_id=[0], n_interp: int = 10, smooth_slices
     filename : str 
         Path to the NIfTI file.
         
-    mask_id : int default = 0. If 0 all masks are merged into a single point cloud
+    mask_id : list of int defatult = [0]
+    If 0 all masks are merged into a single point cloud. 
     
-    n_interp : int
-        Number of slices interpolated between every consecutive original slices. Default = 10.
+    n_interp : int default = 10
+        Number of slices interpolated between every consecutive original slices. 
 
-    smooth_slices : boolean
-        If True, binary slices are smoothed via erosion/dilation operations. Default = True
+    smooth_slices : boolean default = True
+        If True, binary slices are smoothed via erosion/dilation operations. 
     
     Returns
     -------
@@ -503,8 +505,8 @@ def contour_from_3dmask(mask, slices, n_interp: int = 10):
         Array containing the segmentation.
     slices : List
         List of the slices present in the array.
-    n_interp :  int 
-        Number of interpolated slices to generate between two real slices. The default is 10.
+    n_interp :  int default = 10
+        Number of interpolated slices to generate between two real slices. 
 
     Returns
     -------

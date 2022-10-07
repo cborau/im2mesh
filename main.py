@@ -197,6 +197,7 @@ if __name__ == "__main__":
         else:
             interp_method = None
             im_data_path = None
+            input_format_data = None
             
         main(selected_path=selected_path,
              input_format=input_format,
