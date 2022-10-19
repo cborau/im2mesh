@@ -8,6 +8,6 @@ git clone https://github.com/cborau/im2mesh
 cd im2mesh
 pip install -r requirements.txt
 ```
-Additionally, if you want to include this library packages into your code, you can install it from [PyPI](link_to_pypi)
+Additionally, if you want to include this library packages into your code, you can install it from [PyPI](https://pypi.org/project/im2mesh/0.1.0/)
 
 For further information please visit the [documentation site](https://cborau.github.io/im2mesh/html/index.html).
