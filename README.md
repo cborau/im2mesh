@@ -14,6 +14,7 @@ For further information please visit the [documentation site](https://cborau.git
 
 ## Reference
 Please use this reference if you use the library:
-im2mesh: A Python library to reconstruct 3D meshes from scattered data and 2D segmentations. Application to patient-specific Neuroblastoma tumour
-image sequences. D. Sainz-DeMena, J.M. García-Aznar, M.A. Pérez, C. Borau, Applied Sciences 2022
+
+*im2mesh: A Python library to reconstruct 3D meshes from scattered data and 2D segmentations. Application to patient-specific Neuroblastoma tumour
+image sequences. D. Sainz-DeMena, J.M. García-Aznar, M.A. Pérez, C. Borau, Applied Sciences 2022.*
 
