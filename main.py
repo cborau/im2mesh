@@ -193,7 +193,10 @@ if __name__ == "__main__":
         if interpolate2mesh:
             interp_method = interp_method_selection()
             input_format_data = select_input_format_data()
-            im_data_path = fileopenbox(msg="Select the imaging data file")
+            if input_format_data.lower() == 'dicom':
+                im_data_path = diropenbox(msg="Select the imaging data folder")
+            else:
+                im_data_path = fileopenbox(msg="Select the imaging data file")
         else:
             interp_method = None
             im_data_path = None
