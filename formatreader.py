@@ -11,6 +11,7 @@ from pathlib import Path
 from skimage.measure import label
 import visualization as vis
 import nibabel as nib
+from concurrent.futures import ThreadPoolExecutor
 
 
 def get_largest_CC(mask):
@@ -491,50 +492,83 @@ def get_mask_nifti(filename: str, mask_id=[0], n_interp: int = 10, smooth_slices
     return contours_3d, covers, transf_mat
 
 
-def contour_from_3dmask(mask, slices, n_interp: int = 10):
+def process_slice(i, slices, mask, n_interp):
     """
-    From a 3D array containing the semgentation and the list of slices, 
-    it creates a set of interpolated slices between each pair of adjacent 
-    real slices using the sliceinterpolator module. Finally, calls the function
-    analyze_slice_opencv() on each slice (real and interpolated) to get its 
-    contour and outpouts the external points of the whole segmentation and the covers.
-    
+    Process a single slice and return covers and contours_3d.
+
     Parameters
     ----------
-    mask : Numpy array
-        Array containing the segmentation.
+    i : int
+        Index of the current slice.
+
     slices : List
         List of the slices present in the array.
-    n_interp :  int default = 10
-        Number of interpolated slices to generate between two real slices. 
+
+    mask : Numpy array
+        Array containing the segmentation.
+
+    n_interp : int
+        Number of interpolated slices to generate between two real slices.
 
     Returns
     -------
     contours_3d : Numpy array 
         Contains the contours of every slice in voxel coordinates.
 
-    covers : Numpy array
+    covers : Numpy array 
         Contains the points from the top and bottom slices.
-
     """
+    covers = np.array([])
+    contours_3d = np.array([])
 
+    if (slices[i] == np.min(slices)) or (slices[i] == np.max(slices)):
+        s_coords = np.argwhere(mask[:, :, slices[i]]).astype(np.float32)
+        cover = np.append(s_coords, np.ones((len(s_coords), 1)) * slices[i], axis=1).reshape(-1, 3)
+        covers = np.append(covers, cover).reshape(-1, 3)
+
+    if i < len(slices) - 1:
+        for p in range(0, n_interp + 1):
+            interp_slices = slici.interpshape(mask[:, :, slices[i]], mask[:, :, slices[i + 1]], p / (n_interp)) * 1
+            z_idx = (slices[i + 1] - slices[i]) * (p / n_interp) + slices[i]
+            contours_3d = np.append(contours_3d, analyze_slice_opencv(interp_slices, z_pos=z_idx)).reshape(-1, 3)
+
+    return contours_3d, covers
+
+def contour_from_3dmask(mask, slices, n_interp: int = 10):
+        
+    """
+    Process slices in parallel using ThreadPoolExecutor.
+
+    Parameters
+    ----------
+    slices : List
+        List of the slices present in the array.
+
+    mask : Numpy array
+        Array containing the segmentation.
+
+    n_interp : int
+        Number of interpolated slices to generate between two real slices.
+
+    Returns
+    -------
+    contours_3d : Numpy array 
+        Contains the contours of every slice in voxel coordinates.
+        
+    covers : Numpy array 
+        Contains the points from the top and bottom slices.
+    """
     covers = np.array([])
     contours_3d = np.array([])
     prefix = 'Processing ' + str(len(slices)) + ' slices:'
-    vis.progressbar(0, len(slices), prefix=prefix, suffix='complete', length=10)
-    for i in range(len(slices)):
-        vis.progressbar(i + 1, len(slices), prefix=prefix, suffix='complete', length=10)
-        if (slices[i] == np.min(slices)) or (slices[i] == np.max(slices)):
-            s_coords = np.argwhere(mask[:, :, slices[i]]).astype(np.float32)
-            cover = np.append(s_coords, np.ones((len(s_coords), 1)) * slices[i], axis=1).reshape(
-                -1, 3)
+
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(process_slice, i, slices, mask, n_interp) for i in range(len(slices))]
+
+        for future in futures:
+            contour, cover = future.result()
             covers = np.append(covers, cover).reshape(-1, 3)
-        if i < len(slices) - 1:
-            for p in range(0, n_interp + 1):
-                interp_slices = slici.interpshape(mask[:, :, slices[i]], mask[:, :, slices[i + 1]], p / (n_interp)) * 1
-                z_idx = (slices[i + 1] - slices[i]) * (p / n_interp) + slices[i]
-                contours_3d = np.append(contours_3d,
-                                        analyze_slice_opencv(interp_slices, z_pos=z_idx)).reshape(-1, 3)
+            contours_3d = np.append(contours_3d, contour).reshape(-1, 3)
 
     return contours_3d, covers
 

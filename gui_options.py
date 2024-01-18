@@ -21,7 +21,7 @@ def file_folder_selection():
 
 def select_input_format_data():
     text = ("Select the file format of the imaging data to interpolate:\n"
-            "If you choose DICOM, please select the directory where"
+            "If you choose DICOM, please select the directory where "
             "the files are stored.\nIf you choose NIfTI, select the input file.")
     title = "File format selection"
     button_list = []
