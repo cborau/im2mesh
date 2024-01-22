@@ -12,6 +12,7 @@ from skimage.measure import label
 import visualization as vis
 import nibabel as nib
 from concurrent.futures import ThreadPoolExecutor
+import re
 
 
 def get_largest_CC(mask):
@@ -226,7 +227,9 @@ def get_mask_from_images(dirname, ext, z_size=30.0, n_interp=10, smooth_slices=T
     """
 
     count = 0
-    for file in os.listdir(dirname):
+    list_of_files = os.listdir(dirname)
+    list_of_files.sort(key=lambda var:[int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
+    for file in list_of_files:
         if file.endswith(ext):
             count += 1
             fullname = os.path.join(dirname, file)
@@ -554,7 +557,7 @@ def contour_from_3dmask(mask, slices, n_interp: int = 10):
     -------
     contours_3d : Numpy array 
         Contains the contours of every slice in voxel coordinates.
-        
+
     covers : Numpy array 
         Contains the points from the top and bottom slices.
     """
